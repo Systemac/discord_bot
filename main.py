@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-TOKEN = 'NTU3OTEzMDM0OTEyMTcwMDA0.XJI7AQ.UEO2FkZ6xN4qafZ3PGnR7JrfjuQ'
+from config.config import config
 
 description = '''Bot Python'''
 bot = commands.Bot(command_prefix='!', description=description)
@@ -72,4 +72,4 @@ async def prune(ctx, *nombre):
     print(f'Fin de suppression des messages du channel {channel}')
 
 
-bot.run(TOKEN)
+bot.run(config.get('TOKEN'))
