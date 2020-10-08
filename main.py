@@ -69,7 +69,7 @@ async def prune(ctx, *nombre):
             if i == 0 or i > int(nombre[1]):
                 await _.delete()
             i += 1
-    print('end')
+    print(f'Fin de suppression des messages du channel {channel}')
 
 
 bot.run(TOKEN)
