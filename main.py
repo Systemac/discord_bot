@@ -6,6 +6,7 @@ from config.config import config
 description = '''Bot Python'''
 bot = commands.Bot(command_prefix='!', description=description)
 
+
 @bot.event
 async def on_ready():
     print('Logged in as')
