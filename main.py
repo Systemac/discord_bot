@@ -35,14 +35,7 @@ async def move(ctx, *args):
                 await ctx.send(ctx.message.author)
                 await ctx.send(ctx.author.voice.channel)
             else:
-                await ctx.send(f"{ctx.message.author} n'est pas sur un salon vocal.")
-            # print(f"chan : {ctx.author.voice.channel}")
-            # if ctx.author.voice.channel is not None:
-            #     if channel == ctx.author.voice.channel:
-            #         await ctx.send(ctx.message.author)
-            #         await ctx.send(ctx.author.voice.channel)
-            # else:
-            #     await ctx.send(f"{ctx.message.author} n'est pas sur un salon vocal.")
+                await ctx.send(f"{ctx.message.author} n'est pas sur {channel}.")
 
 
 @bot.command(pass_context=True)
