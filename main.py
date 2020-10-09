@@ -23,17 +23,26 @@ async def hello(ctx):
 
 
 @bot.command(pass_context=True)
-async def move(ctx):
+async def move(ctx, *args):
+    for arg in args:
+        print(arg)
     for channel in ctx.guild.channels:
         if isinstance(channel, discord.VoiceChannel):
             # print(channel)
-            print(f"chan : {ctx.author.voice.channel}")
-            if ctx.author.voice.channel is None:
-                if channel == ctx.author.voice.channel:
-                    await ctx.send(ctx.message.author)
-                    await ctx.send(ctx.author.voice.channel)
+            members = channel.members
+            print(members)
+            if ctx.message.author in members:
+                await ctx.send(ctx.message.author)
+                await ctx.send(ctx.author.voice.channel)
             else:
                 await ctx.send(f"{ctx.message.author} n'est pas sur un salon vocal.")
+            # print(f"chan : {ctx.author.voice.channel}")
+            # if ctx.author.voice.channel is not None:
+            #     if channel == ctx.author.voice.channel:
+            #         await ctx.send(ctx.message.author)
+            #         await ctx.send(ctx.author.voice.channel)
+            # else:
+            #     await ctx.send(f"{ctx.message.author} n'est pas sur un salon vocal.")
 
 
 @bot.command(pass_context=True)
@@ -47,17 +56,18 @@ async def a2(ctx):
 
 @bot.command()
 async def prune(ctx, *nombre):
-    print(nombre[0].isdigit())
     channel = ctx.message.channel
-    if nombre[0].isdigit():
+    if not nombre:
+        messages = await ctx.channel.history(limit=2).flatten()
+        for message in messages:
+            await message.delete()
+    # print(nombre[0].isdigit())
+    elif nombre[0].isdigit():
         messages = await ctx.channel.history(limit=int(nombre[0]) + 1).flatten()
         for message in messages:
             await message.delete()
     elif nombre[0] == 'all':
         await channel.purge(limit=None, check=lambda msg: not msg.pinned)
-        # messages = await ctx.channel.history().flatten()
-        # for message in messages:
-        #     await message.delete()
     elif nombre[0] == 'on':
         print(nombre[1])
         messages = await ctx.channel.history().flatten()
