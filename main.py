@@ -1,10 +1,18 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import check
 
 from config.config import config
 
 description = '''Bot Python'''
 bot = commands.Bot(command_prefix='!', description=description)
+
+
+def in_voice_channel():  # check to make sure ctx.author.voice.channel exists
+    def predicate(ctx):
+        return ctx.author.voice and ctx.author.voice.channel
+
+    return check(predicate)
 
 
 @bot.event
@@ -24,27 +32,44 @@ async def hello(ctx):
 
 @bot.command(pass_context=True)
 async def move(ctx, *args):
+    auteur = ctx.message.author
+    channel = ctx.message.channel
+    messages = await ctx.channel.history(limit=1).flatten()
+    for message in messages:
+        await message.delete()
     for arg in args:
         print(arg)
+    voice_channel = []
     for channel in ctx.guild.channels:
         if isinstance(channel, discord.VoiceChannel):
-            # print(channel)
-            members = channel.members
-            print(members)
-            if ctx.message.author in members:
-                await ctx.send(ctx.message.author)
-                await ctx.send(ctx.author.voice.channel)
-            else:
-                await ctx.send(f"{ctx.message.author} n'est pas sur {channel}.")
+            print(channel.name)
+            voice_channel.append(channel)
+    for _ in voice_channel:
+        members = _.members
+        print(members)
+        print(_)
+        if auteur in members:
+            await ctx.send(f"{auteur} est sur le canal {_}")
+    if len(args) > 1:
+        print(args[-1])
+
+
+@in_voice_channel()
+@bot.command()
+async def move1(ctx, *args):
+    channel = args[-1]
+    for chan in ctx.guild.channels:
+        print(f"{chan.name} _ {channel}")
+        if chan.name == channel:
+            print("OUIIIIIII")
+            channel = chan
+    for members in ctx.author.voice.channel.members:
+        await members.move_to(channel)
 
 
 @bot.command(pass_context=True)
 async def a2(ctx):
-    for channel in ctx.guild.channels:
-        if isinstance(channel, discord.VoiceChannel):
-            if channel == ctx.author.voice.channel:
-                await ctx.send(ctx.message.author)
-                await ctx.send(ctx.author.voice.channel)
+    pass
 
 
 @bot.command()
