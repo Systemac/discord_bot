@@ -26,9 +26,14 @@ async def hello(ctx):
 async def move(ctx):
     for channel in ctx.guild.channels:
         if isinstance(channel, discord.VoiceChannel):
-            if channel == ctx.author.voice.channel:
-                await ctx.send(ctx.message.author)
-                await ctx.send(ctx.author.voice.channel)
+            # print(channel)
+            print(f"chan : {ctx.author.voice.channel}")
+            if ctx.author.voice.channel is None:
+                if channel == ctx.author.voice.channel:
+                    await ctx.send(ctx.message.author)
+                    await ctx.send(ctx.author.voice.channel)
+            else:
+                await ctx.send(f"{ctx.message.author} n'est pas sur un salon vocal.")
 
 
 @bot.command(pass_context=True)
