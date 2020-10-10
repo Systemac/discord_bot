@@ -14,7 +14,6 @@ bot = commands.Bot(command_prefix='!', description=description)
 def in_voice_channel():  # check to make sure ctx.author.voice.channel exists
     def predicate(ctx):
         return ctx.author.voice and ctx.author.voice.channel
-
     return check(predicate)
 
 
@@ -27,6 +26,8 @@ def load_json_team():
     if os.path.exists("./config/json_team.json"):
         with open("./config/json_team.json", 'r') as f:
             return json.load(f)
+    else:
+        return {}
 
 
 @bot.event
@@ -46,7 +47,8 @@ async def hello(ctx):
 
 @bot.command(pass_context=True)
 async def team(ctx, *args):
-    json_team = {ctx.message.author.name: []}
+    json_team = load_json_team()
+    json_team[ctx.message.author.name] = []
     for _ in range(len(args)):
         mm = args[_][3:-1]
         user = bot.get_user(int(mm))
