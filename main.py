@@ -58,23 +58,27 @@ async def team(ctx, *args):
 
 @bot.command(pass_context=True)
 async def mvteam(ctx, *args):
+    chann = ctx.author.voice.channel
     channel = args[0]
     auteur = ctx.message.author.name
     js = load_json_team()
-    for chan in ctx.guild.channels:
-        if not isinstance(chan, discord.TextChannel):
-            # print(f"{chan} _ {channel}")
-            if chan.name.lower() == channel.lower():
-                print("OUIIIIIII")
-                channel = chan
-                break
-    if js[auteur] is not None:
-        for i in js[auteur]:
-            for j, k in i.items():
-                l = bot.get_all_members()
-                l = bot.get_user(k)
-                l = f"{l.name}#{l.discriminator}"
-                await l.move_to(channel)
+    if auteur not in js:
+        await ctx.send("La team n'as pas été créer.")
+    else:
+        for chan in ctx.guild.channels:
+            if not isinstance(chan, discord.TextChannel):
+                # print(f"{chan} _ {channel}")
+                if chan.name.lower() == channel.lower():
+                    # print("OUIIIIIII")
+                    channel = chan
+                    break
+        for members in chann.members:
+            for i in js[auteur]:
+                for j, k in i.items():
+                    l = bot.get_user(int(k))
+                    print(f"{l}{members}")
+                    if l == members:
+                        await members.move_to(channel)
 
 
 @bot.command(pass_context=True)
