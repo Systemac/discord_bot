@@ -1,3 +1,6 @@
+import json
+import os
+
 import discord
 from discord.ext import commands
 from discord.ext.commands import check
@@ -14,10 +17,17 @@ def in_voice_channel():  # check to make sure ctx.author.voice.channel exists
 
     return check(predicate)
 
-class Team:
-    def __init__(self, name):
-        self.name = name
-        self.members = []
+
+def save_json_team(js):
+    with open("./config/json_team.json", "w") as f:
+        json.dump(js, f)
+
+
+def load_json_team():
+    if os.path.exists("./config/json_team.json"):
+        with open("./config/json_team.json", 'r') as f:
+            return json.load(f)
+
 
 @bot.event
 async def on_ready():
@@ -35,12 +45,44 @@ async def hello(ctx):
 
 
 @bot.command(pass_context=True)
-async def set_team(ctx, *args):
-    team = Team(name=ctx.message.author)
-    print(team.name)
+async def team(ctx, *args):
+    json_team = {ctx.message.author.name: []}
     for _ in range(len(args)):
-        team.members.append(args[_])
-    await ctx.send(f"{team.name}: {team.members}")
+        mm = args[_][3:-1]
+        user = bot.get_user(int(mm))
+        print(user.name)
+        json_team[ctx.message.author.name].append({user.name: user.id})
+    save_json_team(json_team)
+    await ctx.send(f"{json_team[ctx.message.author.name]}.")
+
+
+@bot.command(pass_context=True)
+async def mvteam(ctx, *args):
+    channel = args[0]
+    auteur = ctx.message.author.name
+    js = load_json_team()
+    for chan in ctx.guild.channels:
+        if not isinstance(chan, discord.TextChannel):
+            # print(f"{chan} _ {channel}")
+            if chan.name.lower() == channel.lower():
+                print("OUIIIIIII")
+                channel = chan
+                break
+    if js[auteur] is not None:
+        for i in js[auteur]:
+            for j, k in i.items():
+                l = bot.get_all_members()
+                l = bot.get_user(k)
+                l = f"{l.name}#{l.discriminator}"
+                await l.move_to(channel)
+
+
+@bot.command(pass_context=True)
+async def lvteam(ctx):
+    json_team = load_json_team()
+    if json_team[ctx.message.author.name] is not None:
+        del json_team[ctx.message.author.name]
+    save_json_team(json_team)
 
 
 @bot.command(pass_context=True)
@@ -77,28 +119,21 @@ async def move1(ctx, *args):
     for message in messages:
         await message.delete()
     for chan in ctx.guild.channels:
-        print(f"{chan.name} _ {channel}")
-        if chan.name.lower() == channel.lower():
-            print("OUIIIIIII")
-            channel = chan
-            break
+        if not isinstance(chan, discord.TextChannel):
+            print(f"{chan} _ {channel}")
+            if chan.name.lower() == channel.lower():
+                print("OUIIIIIII")
+                channel = chan
+                break
     for members in chann.members:
+        print(members)
+        print(type(members))
         await members.move_to(channel)
 
 
 @bot.command(pass_context=True)
-async def a2(ctx, *args):
-    channel = args[-1]
-    auteur = ctx.message.author
-    print(auteur)
-    for _ in ctx.guild.members:
-        print(_)
-    print(args[0])
-    for chan in ctx.guild.channels:
-        if chan.name.lower() == channel.lower():
-            channel = chan
-            break
-    await args[0].move_to(channel)
+async def a2(ctx):
+    pass
 
 
 @bot.command()
@@ -114,7 +149,7 @@ async def prune(ctx, *nombre):
         for message in messages:
             await message.delete()
     elif nombre[0] == 'all':
-        await channel.purge(limit=None, check=lambda msg: not msg.pinned)
+        await channel.purge(limit=None)
     elif nombre[0] == 'on':
         print(nombre[1])
         messages = await ctx.channel.history().flatten()
