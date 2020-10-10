@@ -14,6 +14,10 @@ def in_voice_channel():  # check to make sure ctx.author.voice.channel exists
 
     return check(predicate)
 
+class Team:
+    def __init__(self, name):
+        self.name = name
+        self.members = []
 
 @bot.event
 async def on_ready():
@@ -31,9 +35,17 @@ async def hello(ctx):
 
 
 @bot.command(pass_context=True)
+async def set_team(ctx, *args):
+    team = Team(name=ctx.message.author)
+    print(team.name)
+    for _ in range(len(args)):
+        team.members.append(args[_])
+    await ctx.send(f"{team.name}: {team.members}")
+
+
+@bot.command(pass_context=True)
 async def move(ctx, *args):
     auteur = ctx.message.author
-    channel = ctx.message.channel
     messages = await ctx.channel.history(limit=1).flatten()
     for message in messages:
         await message.delete()
@@ -57,19 +69,36 @@ async def move(ctx, *args):
 @in_voice_channel()
 @bot.command()
 async def move1(ctx, *args):
+    chann = ctx.author.voice.channel
+    print(ctx.author.voice.channel.members)
+    print(chann)
     channel = args[-1]
+    messages = await ctx.channel.history(limit=1).flatten()
+    for message in messages:
+        await message.delete()
     for chan in ctx.guild.channels:
         print(f"{chan.name} _ {channel}")
-        if chan.name == channel:
+        if chan.name.lower() == channel.lower():
             print("OUIIIIIII")
             channel = chan
-    for members in ctx.author.voice.channel.members:
+            break
+    for members in chann.members:
         await members.move_to(channel)
 
 
 @bot.command(pass_context=True)
-async def a2(ctx):
-    pass
+async def a2(ctx, *args):
+    channel = args[-1]
+    auteur = ctx.message.author
+    print(auteur)
+    for _ in ctx.guild.members:
+        print(_)
+    print(args[0])
+    for chan in ctx.guild.channels:
+        if chan.name.lower() == channel.lower():
+            channel = chan
+            break
+    await args[0].move_to(channel)
 
 
 @bot.command()
