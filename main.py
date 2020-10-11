@@ -4,6 +4,7 @@ import os
 import discord
 from discord.ext import commands
 from discord.ext.commands import check
+import time
 
 from config.config import config
 
@@ -47,24 +48,63 @@ async def hello(ctx):
 
 @bot.command(pass_context=True)
 async def team(ctx, *args):
-    json_team = load_json_team()
-    json_team[ctx.message.author.name] = []
-    for _ in range(len(args)):
-        mm = args[_][3:-1]
-        user = bot.get_user(int(mm))
-        print(user.name)
-        json_team[ctx.message.author.name].append({user.name: user.id})
-    save_json_team(json_team)
-    await ctx.send(f"{json_team[ctx.message.author.name]}.")
+    if args[0] == "liste":
+        js = load_json_team()
+        j = []
+        if len(js) < 1:
+            await ctx.send("Pas de team créer pour l'instant.")
+            time.sleep(3)
+            messages = await ctx.channel.history(limit=2).flatten()
+            for message in messages:
+                await message.delete()
+        else:
+            for i in js:
+                j.append(i)
+            await ctx.send(j)
+    elif args[0] == "detail":
+        name_team = args[1]
+        js = load_json_team()
+        if name_team in js:
+            await ctx.send(f"Detail de la team {name_team}: \n {js[name_team]}.")
+        else:
+            await ctx.send(f"La team {name_team} n'existe pas.")
+        time.sleep(5)
+        messages = await ctx.channel.history(limit=2).flatten()
+        for message in messages:
+            await message.delete()
+    elif args[0] == "delete":
+        js = load_json_team()
+        name_team = args[1]
+        if name_team in js:
+            del js[name_team]
+            save_json_team(js)
+        await ctx.send(f"La team {name_team} à été supprimées")
+        time.sleep(5)
+        messages = await ctx.channel.history(limit=2).flatten()
+        for message in messages:
+            await message.delete()
+
+    else:
+        name_team = args[0]
+        json_team = load_json_team()
+        json_team[name_team] = []
+        for _ in range(len(args) -1, 0, -1):
+            mm = args[_][3:-1]
+            user = bot.get_user(int(mm))
+            print(user.name)
+            json_team[name_team].append({user.name: user.id})
+        save_json_team(json_team)
+        await ctx.send(f"{json_team[name_team]}.")
 
 
 @bot.command(pass_context=True)
 async def mvteam(ctx, *args):
     chann = ctx.author.voice.channel
-    channel = args[0]
-    auteur = ctx.message.author.name
+    name_team = args[0]
+    channel = args[1]
+    # auteur = ctx.message.author.name
     js = load_json_team()
-    if auteur not in js:
+    if name_team not in js:
         await ctx.send("La team n'as pas été créer.")
     else:
         for chan in ctx.guild.channels:
@@ -75,7 +115,7 @@ async def mvteam(ctx, *args):
                     channel = chan
                     break
         for members in chann.members:
-            for i in js[auteur]:
+            for i in js[name_team]:
                 for j, k in i.items():
                     l = bot.get_user(int(k))
                     print(f"{l}{members}")
@@ -84,10 +124,11 @@ async def mvteam(ctx, *args):
 
 
 @bot.command(pass_context=True)
-async def lvteam(ctx):
+async def lvteam(ctx, name_team):
+    name_team = name_team
     json_team = load_json_team()
-    if json_team[ctx.message.author.name] is not None:
-        del json_team[ctx.message.author.name]
+    if json_team[name_team] is not None:
+        del json_team[name_team]
     save_json_team(json_team)
 
 
