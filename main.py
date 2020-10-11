@@ -139,6 +139,7 @@ async def move1(ctx, *args):
 
 @bot.command(pass_context=True)
 async def a2(ctx):
+    chann = ctx.author.voice.channel
     pass
 
 
