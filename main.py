@@ -30,6 +30,19 @@ def load_json_team():
         return {}
 
 
+def save_json_solde(js):
+    with open("./config/solde.json", "w") as f:
+        json.dump(js, f)
+
+
+def load_json_solde():
+    if os.path.exists("./config/solde.json"):
+        with open("./config/solde.json", 'r') as f:
+            return json.load(f)
+    else:
+        return {}
+
+
 @bot.event
 async def on_ready():
     print('Logged in as')
