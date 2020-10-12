@@ -1,10 +1,10 @@
 import json
 import os
+import time
 
 import discord
 from discord.ext import commands
 from discord.ext.commands import check
-import time
 
 from config.config import config
 
@@ -53,6 +53,7 @@ async def on_ready():
 
 
 @bot.command()
+@commands.has_role("bot_sc")
 async def hello(ctx):
     """Says Hello World"""
     await ctx.send("Hello World")
@@ -60,6 +61,7 @@ async def hello(ctx):
 
 
 @bot.command(pass_context=True)
+@commands.has_role("bot_sc")
 async def team(ctx, *args):
     if args[0] == "liste":
         js = load_json_team()
@@ -111,6 +113,7 @@ async def team(ctx, *args):
 
 
 @bot.command(pass_context=True)
+@commands.has_role("bot_sc")
 async def mvteam(ctx, *args):
     chann = ctx.author.voice.channel
     name_team = args[0]
@@ -137,6 +140,7 @@ async def mvteam(ctx, *args):
 
 
 @bot.command(pass_context=True)
+@commands.has_role("bot_sc")
 async def lvteam(ctx, name_team):
     name_team = name_team
     json_team = load_json_team()
@@ -146,6 +150,7 @@ async def lvteam(ctx, name_team):
 
 
 @bot.command(pass_context=True)
+@commands.has_role("bot_sc")
 async def move(ctx, *args):
     auteur = ctx.message.author
     messages = await ctx.channel.history(limit=1).flatten()
@@ -170,6 +175,7 @@ async def move(ctx, *args):
 
 @in_voice_channel()
 @bot.command()
+@commands.has_role("bot_sc")
 async def move1(ctx, *args):
     chann = ctx.author.voice.channel
     print(ctx.author.voice.channel.members)
@@ -198,6 +204,7 @@ async def a2(ctx):
 
 
 @bot.command()
+@commands.has_role("bot_sc")
 async def prune(ctx, *nombre):
     channel = ctx.message.channel
     if not nombre:
