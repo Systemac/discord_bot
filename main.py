@@ -15,6 +15,7 @@ bot = commands.Bot(command_prefix='!', description=description)
 def in_voice_channel():  # check to make sure ctx.author.voice.channel exists
     def predicate(ctx):
         return ctx.author.voice and ctx.author.voice.channel
+
     return check(predicate)
 
 
@@ -50,6 +51,17 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
+
+
+@bot.command()
+@commands.has_role("bot_sc")
+async def solde(ctx, *args):
+    if args[0] == "add":
+        user = args[1]
+        ajout = args[2]
+    elif args[0] == "del":
+        user = args[1]
+        retire = args[2]
 
 
 @bot.command()
@@ -103,7 +115,7 @@ async def team(ctx, *args):
         name_team = args[0]
         json_team = load_json_team()
         json_team[name_team] = []
-        for _ in range(len(args) -1, 0, -1):
+        for _ in range(len(args) - 1, 0, -1):
             mm = args[_][3:-1]
             user = bot.get_user(int(mm))
             print(user.name)
@@ -124,7 +136,7 @@ async def mvteam(ctx, *args):
         await ctx.send("La team n'as pas été créer.")
     else:
         for chan in ctx.guild.channels:
-            if not isinstance(chan, discord.TextChannel):
+            if isinstance(chan, discord.VoiceChannel):
                 # print(f"{chan} _ {channel}")
                 if chan.name.lower() == channel.lower():
                     # print("OUIIIIIII")
