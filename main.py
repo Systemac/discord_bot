@@ -54,7 +54,7 @@ async def on_ready():
 
 
 @bot.command()
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def solde(ctx, *args):
     if args[0] == "add":
         user = args[1]
@@ -65,7 +65,7 @@ async def solde(ctx, *args):
 
 
 @bot.command()
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def hello(ctx):
     """Says Hello World"""
     await ctx.send("Hello World")
@@ -73,7 +73,7 @@ async def hello(ctx):
 
 
 @bot.command(pass_context=True)
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def team(ctx, *args):
     if args[0] == "liste":
         js = load_json_team()
@@ -125,7 +125,7 @@ async def team(ctx, *args):
 
 
 @bot.command(pass_context=True)
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def mvteam(ctx, *args):
     chann = ctx.author.voice.channel
     name_team = args[0]
@@ -139,12 +139,15 @@ async def mvteam(ctx, *args):
             if isinstance(chan, discord.VoiceChannel):
                 # print(f"{chan} _ {channel}")
                 if chan.name.lower() == channel.lower():
-                    # print("OUIIIIIII")
+                    print("OUIIIIIII")
                     channel = chan
                     break
+        print(channel)
         for members in chann.members:
             for i in js[name_team]:
+                print(i)
                 for j, k in i.items():
+                    print(k)
                     l = bot.get_user(int(k))
                     print(f"{l}{members}")
                     if l == members:
@@ -152,7 +155,7 @@ async def mvteam(ctx, *args):
 
 
 @bot.command(pass_context=True)
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def lvteam(ctx, name_team):
     name_team = name_team
     json_team = load_json_team()
@@ -162,7 +165,7 @@ async def lvteam(ctx, name_team):
 
 
 @bot.command(pass_context=True)
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def move(ctx, *args):
     auteur = ctx.message.author
     messages = await ctx.channel.history(limit=1).flatten()
@@ -187,7 +190,7 @@ async def move(ctx, *args):
 
 @in_voice_channel()
 @bot.command()
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def move1(ctx, *args):
     chann = ctx.author.voice.channel
     print(ctx.author.voice.channel.members)
@@ -216,7 +219,7 @@ async def a2(ctx):
 
 
 @bot.command()
-@commands.has_role("bot_sc")
+@commands.has_role("bot")
 async def prune(ctx, *nombre):
     channel = ctx.message.channel
     if not nombre:
