@@ -45,6 +45,19 @@ def load_json_solde():
         return {}
 
 
+def save_json_membre(js):
+    with open("./config/membre.json", "w") as f:
+        json.dump(js, f)
+
+
+def load_json_membre():
+    if os.path.exists("./config/membre.json"):
+        with open("./config/membre.json", 'r') as f:
+            return json.load(f)
+    else:
+        return {}
+
+
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -56,6 +69,8 @@ async def on_ready():
 @bot.command()
 @commands.has_role("bot")
 async def solde(ctx, *args):
+    for m in ctx.guild.get_all_member:
+        print(m)
     if args[0] == "add":
         user = args[1]
         ajout = args[2]
