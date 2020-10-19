@@ -152,8 +152,8 @@ async def mvteam(ctx, *args):
     else:
         for chan in ctx.guild.channels:
             if isinstance(chan, discord.VoiceChannel):
-                # print(f"{chan} _ {channel}")
-                if chan.name.lower() == channel.lower():
+                print(f"{chan} _ {channel}")
+                if channel.lower() in chan.name.lower():
                     print("OUIIIIIII")
                     channel = chan
                     break
