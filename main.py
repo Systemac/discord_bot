@@ -171,16 +171,6 @@ async def mvteam(ctx, *args):
 
 @bot.command(pass_context=True)
 @commands.has_role("bot")
-async def lvteam(ctx, name_team):
-    name_team = name_team
-    json_team = load_json_team()
-    if json_team[name_team] is not None:
-        del json_team[name_team]
-    save_json_team(json_team)
-
-
-@bot.command(pass_context=True)
-@commands.has_role("bot")
 async def move(ctx, *args):
     auteur = ctx.message.author
     messages = await ctx.channel.history(limit=1).flatten()
