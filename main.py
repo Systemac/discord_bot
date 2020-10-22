@@ -3,6 +3,7 @@ import os
 import time
 
 import discord
+import requests
 from discord.ext import commands
 from discord.ext.commands import check
 
@@ -58,6 +59,21 @@ def load_json_membre():
         return {}
 
 
+def get_item(item):
+    dico = {}
+    i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
+    for j in i:
+        if j['name'].lower().find(item.lower()) != -1:
+            # print(j)
+            params = {
+                'id': j['id']
+            }
+            res = requests.get(f"https://finder.deepspacecrew.com/Search/{j['id']}")
+            # print(res.status_code)
+            dico[j['name']] = res.url
+    return dico
+
+
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -77,6 +93,15 @@ async def solde(ctx, *args):
     elif args[0] == "del":
         user = args[1]
         retire = args[2]
+
+
+@bot.command(pass_context=True)
+@commands.has_role("bot")
+async def find(ctx, args):
+    # print(f"argument : {args}")
+    i = get_item(args)
+    for key in i:
+        await ctx.send(f"{key} : {i[key]}")
 
 
 @bot.command()
