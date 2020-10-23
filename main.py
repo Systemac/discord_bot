@@ -1,3 +1,4 @@
+import asyncio
 import json
 import os
 import time
@@ -83,7 +84,7 @@ def containr(text, words):
     # text.replace('-', ' ')
     text.replace('\'', ' ')
     # print(text)
-    print(text)
+    # print(text)
     for oneWord in words:
         # print(oneWord)
         if oneWord not in text.replace('-', ' ').replace('\'', ' ').split():
@@ -101,7 +102,11 @@ def get_item(item):
         # print(i[j].lower())
         if containr(i[j].lower(), item):
             res = requests.get(f"https://finder.deepspacecrew.com/Search/{j}")
-            dico[i[j]] = res.url
+            print(res.reason)
+            if len(res.url) < 34:
+                dico[i[j]] = res.url + f'Shipshops1/{j}'
+            else:
+                dico[i[j]] = res.url
             # print("trouvé !")
     if len(dico) == 0:
         dico = {'rien': 'trouvé'}
@@ -111,7 +116,7 @@ def get_item(item):
 
 async def status_task():
     while True:
-        time.sleep(900)
+        await asyncio.sleep(900)
         gets_items()
 
 
