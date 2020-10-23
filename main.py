@@ -58,24 +58,25 @@ def load_json_membre():
     else:
         return {}
 
+
 def containr(text, words):
     for oneWord in words:
         if oneWord not in text.replace('-', ' ').split():
             return False
     return True
 
+
 def get_item(item):
     dico = {}
     i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
     for j in i:
-        if j['name'].lower().find(item.lower()) != -1:
-            # print(j)
-            params = {
-                'id': j['id']
-            }
+        print(j)
+        if containr(j['name'].lower(), item):
             res = requests.get(f"https://finder.deepspacecrew.com/Search/{j['id']}")
-            # print(res.status_code)
             dico[j['name']] = res.url
+            print("trouvé !")
+    if len(dico) == 0:
+        dico = {'rien': 'trouvé'}
     return dico
 
 
