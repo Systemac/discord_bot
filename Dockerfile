@@ -1,5 +1,6 @@
 FROM python:3.8
 COPY requirements.txt main.py main.sh ./
+RUN echo "Europe/Paris" > /etc/timezone
 RUN pip install --no-cache-dir -r /requirements.txt
 RUN apt-get update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates apt-utils
