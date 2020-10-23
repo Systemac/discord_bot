@@ -121,6 +121,7 @@ async def on_ready():
     print(bot.user.name)
     print(bot.user.id)
     print('------')
+    bot.loop.create_task(status_task())
 
 
 @bot.command()
