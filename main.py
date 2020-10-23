@@ -109,6 +109,12 @@ def get_item(item):
     return dico
 
 
+async def status_task():
+    while True:
+        time.sleep(900)
+        gets_items()
+
+
 @bot.event
 async def on_ready():
     print('Logged in as')
