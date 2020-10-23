@@ -1,7 +1,6 @@
 FROM python:3.8
 COPY requirements.txt main.py ./
 RUN pip install --no-cache-dir -r /requirements.txt
-VOLUME
 RUN apt-get update
 RUN apt-get -y install curl dirmngr apt-transport-https lsb-release ca-certificates apt-utils
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
