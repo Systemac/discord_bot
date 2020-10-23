@@ -59,21 +59,49 @@ def load_json_membre():
         return {}
 
 
+def gets_items():
+    dico = {}
+    i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
+    for j in i:
+        dico[j['id']] = j['name']
+    with open("./config/items.json", 'w') as f:
+        json.dump(dico, f)
+
+
+def load_items():
+    if os.path.exists("./config/items.json"):
+        with open("./config/items.json", 'r') as f:
+            return json.load(f)
+    else:
+        return {}
+
+
 def containr(text, words):
+    # print(words)
+    # print(text)
+    text.replace('-', ' ')
+    # text.replace('-', ' ')
+    text.replace('\'', ' ')
+    # print(text)
+    print(text)
     for oneWord in words:
-        if oneWord not in text.replace('-', ' ').split():
+        # print(oneWord)
+        if oneWord not in text.replace('-', ' ').replace('\'', ' ').split():
             return False
     return True
 
 
 def get_item(item):
     dico = {}
-    i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
+    i = load_items()
+    if len(i) == 0:
+        gets_items()
+        i = load_items()
     for j in i:
-        # print(j)
-        if containr(j['name'].lower(), item):
-            res = requests.get(f"https://finder.deepspacecrew.com/Search/{j['id']}")
-            dico[j['name']] = res.url
+        # print(i[j].lower())
+        if containr(i[j].lower(), item):
+            res = requests.get(f"https://finder.deepspacecrew.com/Search/{j}")
+            dico[i[j]] = res.url
             print("trouvé !")
     if len(dico) == 0:
         dico = {'rien': 'trouvé'}
@@ -104,7 +132,7 @@ async def solde(ctx, *args):
 
 @bot.command(pass_context=True)
 @commands.has_role("bot")
-async def find(ctx, args):
+async def find(ctx, *args):
     # print(f"argument : {args}")
     i = get_item(args)
     for key in i:
