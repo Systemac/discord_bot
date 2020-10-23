@@ -70,13 +70,14 @@ def get_item(item):
     dico = {}
     i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
     for j in i:
-        print(j)
+        # print(j)
         if containr(j['name'].lower(), item):
             res = requests.get(f"https://finder.deepspacecrew.com/Search/{j['id']}")
             dico[j['name']] = res.url
             print("trouvé !")
     if len(dico) == 0:
         dico = {'rien': 'trouvé'}
+    print(f"Envoi des infos sur {item}")
     return dico
 
 
