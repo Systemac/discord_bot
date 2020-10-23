@@ -58,6 +58,11 @@ def load_json_membre():
     else:
         return {}
 
+def containr(text, words):
+    for oneWord in words:
+        if oneWord not in text.replace('-', ' ').split():
+            return False
+    return True
 
 def get_item(item):
     dico = {}

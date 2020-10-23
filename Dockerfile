@@ -8,4 +8,4 @@ RUN apt install -y nodejs
 RUN apt -y install gcc g++ make
 RUN npm install pm2 -g
 #CMD [ "python", "main.py" ]
-CMD ["pm2", "start", "main.py", "--name", "bot_discord", "--interpreter", "python3"]
+CMD ["sh", "main.sh"]
