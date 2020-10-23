@@ -1,5 +1,5 @@
 FROM python:3.8
-COPY requirements.txt main.py main.sh ./
+COPY requirements.txt main.py ./
 ENV TZ "Europe/Paris"
 RUN echo $TZ > /etc/timezone && \
 apt-get update && apt-get install -y tzdata && \
