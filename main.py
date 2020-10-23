@@ -102,7 +102,7 @@ def get_item(item):
         if containr(i[j].lower(), item):
             res = requests.get(f"https://finder.deepspacecrew.com/Search/{j}")
             dico[i[j]] = res.url
-            print("trouvé !")
+            # print("trouvé !")
     if len(dico) == 0:
         dico = {'rien': 'trouvé'}
     print(f"Envoi des infos sur {item}")
