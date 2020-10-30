@@ -87,7 +87,7 @@ def containr(text, words):
     # print(text)
     for oneWord in words:
         # print(oneWord)
-        if oneWord not in text.replace('-', ' ').replace('\'', ' ').split():
+        if oneWord not in text.replace('-', ' ').replace('\'', ' '):
             return False
     return True
 
