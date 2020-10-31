@@ -61,10 +61,8 @@ def load_json_membre():
 
 
 def gets_items():
-    dico = {}
     i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
-    for j in i:
-        dico[j['id']] = j['name']
+    dico = {j['id']: j['name'] for j in i}
     with open("./config/items.json", 'w') as f:
         json.dump(dico, f)
 
@@ -103,12 +101,9 @@ def get_item(item):
         if containr(i[j].lower(), item):
             res = requests.get(f"https://finder.deepspacecrew.com/Search/{j}")
             print(res.reason)
-            if len(res.url) < 34:
-                dico[i[j]] = res.url + f'Shipshops1/{j}'
-            else:
-                dico[i[j]] = res.url
+            dico[i[j]] = res.url + f'Shipshops1/{j}' if len(res.url) < 34 else res.url
             # print("trouvé !")
-    if len(dico) == 0:
+    if not dico:
         dico = {'rien': 'trouvé'}
     print(f"Envoi des infos sur {item}")
     return dico
@@ -164,7 +159,6 @@ async def hello(ctx):
 async def team(ctx, *args):
     if args[0] == "liste":
         js = load_json_team()
-        j = []
         if len(js) < 1:
             await ctx.send("Pas de team créer pour l'instant.")
             time.sleep(3)
@@ -172,8 +166,7 @@ async def team(ctx, *args):
             for message in messages:
                 await message.delete()
         else:
-            for i in js:
-                j.append(i)
+            j = [i for i in js]
             await ctx.send(j)
     elif args[0] == "detail":
         name_team = args[1]
