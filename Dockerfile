@@ -1,5 +1,5 @@
 FROM python:3.8
-COPY requirements.txt main.py ./
+COPY requirements.txt main.py startup.sh ./
 ENV TZ "Europe/Paris"
 RUN echo $TZ > /etc/timezone && \
 apt-get update && apt-get install -y tzdata && \
@@ -16,5 +16,4 @@ RUN apt -y install gcc g++ make
 RUN npm install pm2 -g
 RUN apt autoremove -y
 RUN apt clean
-RUN pm2 start main.py
-CMD ["pm2", "start", "main.py", "|", "pm2","monit"]
+CMD ["sh", "startup.sh"]
