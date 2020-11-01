@@ -61,12 +61,14 @@ def load_json_membre():
 
 
 def gets_items():
-    dico = {}
-    i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
-    for j in i:
-        dico[j['id']] = j['name']
-    with open("./config/items.json", 'w') as f:
-        json.dump(dico, f)
+    i = requests.get("https://finder.deepspacecrew.com/GetSearch")
+    if i.status_code != 200:
+        return False
+    else:
+        dico = {j['id']: j['name'] for j in i.json()}
+        with open("./config/items.json", 'w') as f:
+            json.dump(dico, f)
+        return True
 
 
 def load_items():
@@ -87,7 +89,7 @@ def containr(text, words):
     # print(text)
     for oneWord in words:
         # print(oneWord)
-        if oneWord not in text.replace('-', ' ').replace('\'', ' ').split():
+        if oneWord not in text.replace('-', ' ').replace('\'', ' '):
             return False
     return True
 
@@ -96,19 +98,20 @@ def get_item(item):
     dico = {}
     i = load_items()
     if len(i) == 0:
-        gets_items()
-        i = load_items()
+        a = gets_items()
+        if a:
+            i = load_items()
+        else:
+            asyncio.sleep(30)
+            get_item(item)
     for j in i:
         # print(i[j].lower())
         if containr(i[j].lower(), item):
             res = requests.get(f"https://finder.deepspacecrew.com/Search/{j}")
             print(res.reason)
-            if len(res.url) < 34:
-                dico[i[j]] = res.url + f'Shipshops1/{j}'
-            else:
-                dico[i[j]] = res.url
+            dico[i[j]] = res.url + f'Shipshops1/{j}' if len(res.url) < 34 else res.url
             # print("trouvé !")
-    if len(dico) == 0:
+    if not dico:
         dico = {'rien': 'trouvé'}
     print(f"Envoi des infos sur {item}")
     return dico
@@ -146,7 +149,10 @@ async def solde(ctx, *args):
 @commands.has_role("bot")
 async def find(ctx, *args):
     # print(f"argument : {args}")
+    args_ = ' '.join(iter(args))
+    await ctx.send(f"Lancement de la recherche sur {args_}.....")
     i = get_item(args)
+    await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
     for key in i:
         await ctx.send(f"{key} : {i[key]}")
 
@@ -164,7 +170,6 @@ async def hello(ctx):
 async def team(ctx, *args):
     if args[0] == "liste":
         js = load_json_team()
-        j = []
         if len(js) < 1:
             await ctx.send("Pas de team créer pour l'instant.")
             time.sleep(3)
@@ -172,8 +177,7 @@ async def team(ctx, *args):
             for message in messages:
                 await message.delete()
         else:
-            for i in js:
-                j.append(i)
+            j = [i for i in js]
             await ctx.send(j)
     elif args[0] == "detail":
         name_team = args[1]
@@ -292,7 +296,6 @@ async def move1(ctx, *args):
 @bot.command(pass_context=True)
 async def a2(ctx):
     chann = ctx.author.voice.channel
-    pass
 
 
 @bot.command()
