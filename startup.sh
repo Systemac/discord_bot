@@ -1,1 +1,1 @@
-pm2 start main.py --restart-delay=100
+pm2 start main.py --restart-delay=100 --watching
