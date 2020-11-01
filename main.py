@@ -62,11 +62,15 @@ def load_json_membre():
 
 def gets_items():
     dico = {}
-    i = requests.get("https://finder.deepspacecrew.com/GetSearch").json()
-    for j in i:
-        dico[j['id']] = j['name']
-    with open("./config/items.json", 'w') as f:
-        json.dump(dico, f)
+    i = requests.get("https://finder.deepspacecrew.com/GetSearch")
+    if i.status_code != 200:
+        return False
+    else:
+        for j in i.json():
+            dico[j['id']] = j['name']
+        with open("./config/items.json", 'w') as f:
+            json.dump(dico, f)
+        return True
 
 
 def load_items():
@@ -96,8 +100,12 @@ def get_item(item):
     dico = {}
     i = load_items()
     if len(i) == 0:
-        gets_items()
-        i = load_items()
+        a = gets_items()
+        if a:
+            i = load_items()
+        else:
+            await asyncio.sleep(30)
+            get_item(item)
     for j in i:
         # print(i[j].lower())
         if containr(i[j].lower(), item):
