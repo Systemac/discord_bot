@@ -98,17 +98,21 @@ def get_item(item):
     dico = {}
     i = load_items()
     if len(i) == 0:
-        a = gets_items()
-        if a:
-            i = load_items()
-        else:
-            asyncio.sleep(30)
+        try:
+            a = gets_items()
+            if a:
+                i = load_items()
+            else:
+                asyncio.sleep(30)
+                get_item(item)
+        except:
+            asyncio.sleep(100)
             get_item(item)
     for j in i:
         # print(i[j].lower())
         if containr(i[j].lower(), item):
             res = requests.get(f"https://finder.deepspacecrew.com/Search/{j}")
-            print(res.reason)
+            # print(res.reason)
             dico[i[j]] = res.url + f'Shipshops1/{j}' if len(res.url) < 34 else res.url
             # print("trouvé !")
     if not dico:
@@ -119,8 +123,11 @@ def get_item(item):
 
 async def status_task():
     while True:
-        await asyncio.sleep(900)
-        gets_items()
+        try:
+            gets_items()
+        except:
+            await asyncio.sleep(10)
+        await asyncio.sleep(10000)
 
 
 @bot.event
@@ -152,9 +159,13 @@ async def find(ctx, *args):
     args_ = ' '.join(iter(args))
     await ctx.send(f"Lancement de la recherche sur {args_}.....")
     i = get_item(args)
-    await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
+    embedvar = discord.Embed(title=f'Résultat de la recherche sur {args_} :')
     for key in i:
-        await ctx.send(f"{key} : {i[key]}")
+        embedvar.add_field(name=f"{key} :", value=i[key], inline=False)
+    await ctx.send(embed=embedvar)
+    # await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
+    # for key in i:
+    #     await ctx.send(f"{key} : {i[key]}")
 
 
 @bot.command()
