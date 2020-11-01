@@ -159,9 +159,13 @@ async def find(ctx, *args):
     args_ = ' '.join(iter(args))
     await ctx.send(f"Lancement de la recherche sur {args_}.....")
     i = get_item(args)
-    await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
+    embedvar = discord.Embed(title=f'Résultat de la recherche sur {args_} :')
     for key in i:
-        await ctx.send(f"{key} : {i[key]}")
+        embedvar.add_field(name=key, value=i[key], inline=False)
+    await ctx.send(embed=embedvar)
+    # await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
+    # for key in i:
+    #     await ctx.send(f"{key} : {i[key]}")
 
 
 
