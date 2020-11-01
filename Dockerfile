@@ -16,5 +16,5 @@ RUN apt -y install gcc g++ make
 RUN npm install pm2 -g
 RUN apt autoremove -y
 RUN apt clean
-RUN pm2 start main.py
+RUN pm2 start main.py --watch
 CMD ["pm2", "monit"]
