@@ -104,7 +104,7 @@ def get_item(item):
         if a:
             i = load_items()
         else:
-            await asyncio.sleep(30)
+            asyncio.sleep(30)
             get_item(item)
     for j in i:
         # print(i[j].lower())
@@ -154,7 +154,10 @@ async def solde(ctx, *args):
 @commands.has_role("bot")
 async def find(ctx, *args):
     # print(f"argument : {args}")
+    args_ = ' '.join(elem for elem in args)
+    await ctx.send(f"Lancement de la recherche sur {args_}.....")
     i = get_item(args)
+    await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
     for key in i:
         await ctx.send(f"{key} : {i[key]}")
 
