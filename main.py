@@ -161,7 +161,7 @@ async def find(ctx, *args):
     i = get_item(args)
     embedvar = discord.Embed(title=f'Résultat de la recherche sur {args_} :')
     for key in i:
-        embedvar.add_field(name=key, value=i[key], inline=False)
+        embedvar.add_field(name=f"{key} :", value=i[key], inline=False)
     await ctx.send(embed=embedvar)
     # await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
     # for key in i:
