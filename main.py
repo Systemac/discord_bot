@@ -60,10 +60,11 @@ def load_json_membre():
         return {}
 
 
-def gets_items():
+async def gets_items():
     i = requests.get("https://finder.deepspacecrew.com/GetSearch")
     if i.status_code != 200:
-        return False
+        await asyncio.sleep(30)
+        await gets_items()
     else:
         dico = {j['id']: j['name'] for j in i.json()}
         with open("./config/items.json", 'w') as f:
@@ -124,7 +125,7 @@ def get_item(item):
 async def status_task():
     while True:
         try:
-            gets_items()
+            await gets_items()
         except:
             await asyncio.sleep(10)
         await asyncio.sleep(10000)
