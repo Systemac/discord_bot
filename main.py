@@ -158,15 +158,18 @@ async def solde(ctx, *args):
 async def find(ctx, *args):
     # print(f"argument : {args}")
     args_ = ' '.join(iter(args))
-    await ctx.send(f"Lancement de la recherche sur {args_}.....")
-    i = get_item(args)
-    embedvar = discord.Embed(title=f'Résultat de la recherche sur {args_} :')
-    for key in i:
-        embedvar.add_field(name=f"{key} :", value=i[key], inline=False)
-    await ctx.send(embed=embedvar)
-    # await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
-    # for key in i:
-    #     await ctx.send(f"{key} : {i[key]}")
+    if len(args_) < 3:
+        await ctx.send("Merci d'envoyer un paramètre à la demande !")
+    else:
+        await ctx.send(f"Lancement de la recherche sur {args_}.....")
+        i = get_item(args)
+        embedvar = discord.Embed(title=f'Résultat de la recherche sur {args_} :')
+        for key in i:
+            embedvar.add_field(name=f"{key} :", value=i[key], inline=False)
+        await ctx.send(embed=embedvar)
+        # await ctx.send(f"{len(i)} résultat{'s' if len(i) > 1 else ''} pour {args_} :")
+        # for key in i:
+        #     await ctx.send(f"{key} : {i[key]}")
 
 
 
