@@ -266,8 +266,8 @@ async def mvteam(ctx, *args):
 async def move(ctx, *args):
     auteur = ctx.message.author
     messages = await ctx.channel.history(limit=1).flatten()
-    for message in messages:
-        await message.delete()
+    # for message in messages:
+    #     await message.delete()
     for arg in args:
         print(arg)
     voice_channel = []
