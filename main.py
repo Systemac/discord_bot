@@ -104,10 +104,10 @@ def get_item(item):
             if a:
                 i = load_items()
             else:
-                asyncio.sleep(30)
+                asyncio.sleep(10)
                 get_item(item)
         except:
-            asyncio.sleep(100)
+            asyncio.sleep(10)
             get_item(item)
     for j in i:
         # print(i[j].lower())
@@ -162,7 +162,7 @@ async def find(ctx, *args):
         await ctx.send("Merci d'envoyer un paramètre à la demande !")
     else:
         await ctx.send(f"Lancement de la recherche sur {args_}.....")
-        i = get_item(args)
+        i = await get_item(args)
         embedvar = discord.Embed(title=f'Résultat de la recherche sur {args_} :')
         for key in i:
             embedvar.add_field(name=f"{key} :", value=i[key], inline=False)
