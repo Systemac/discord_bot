@@ -104,10 +104,10 @@ def get_item(item):
             if a:
                 i = load_items()
             else:
-                asyncio.sleep(10)
+                asyncio.sleep(30)
                 get_item(item)
         except:
-            asyncio.sleep(10)
+            asyncio.sleep(30)
             get_item(item)
     for j in i:
         # print(i[j].lower())
