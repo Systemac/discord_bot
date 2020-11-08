@@ -156,7 +156,6 @@ async def solde(ctx, *args):
 @bot.command(pass_context=True)
 @commands.has_role("bot")
 async def find(ctx, *args):
-    # print(f"argument : {args}")
     args_ = ' '.join(iter(args))
     if len(args_) < 3:
         await ctx.send("Merci d'envoyer un paramètre à la demande !")
