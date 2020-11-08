@@ -162,7 +162,7 @@ async def find(ctx, *args):
         await ctx.send("Merci d'envoyer un paramètre à la demande !")
     else:
         await ctx.send(f"Lancement de la recherche sur {args_}.....")
-        i = await get_item(args)
+        i = get_item(args)
         embedvar = discord.Embed(title=f'Résultat de la recherche sur {args_} :')
         for key in i:
             embedvar.add_field(name=f"{key} :", value=i[key], inline=False)
